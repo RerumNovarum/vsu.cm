@@ -1,0 +1,2 @@
+#!/bin/bash
+./td2tex < "$1" | pandoc --latex-engine xelatex -f latex - -o "${1%.td}".pdf
