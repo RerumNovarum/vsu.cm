@@ -48,9 +48,11 @@ void TD_C_DEC::mul_row(int i, V alpha) {
 }
 
 TD_T_DEC
-void TD_C_DEC::row_add(int from, int to, V alpha) {
-  A.row_add(from, to, alpha);
-  d[to] += alpha * d[from];
+bool TD_C_DEC::row_try_add(int from, int to, V alpha) {
+  if (A.row_try_add(from, to, alpha)) {
+    d[to] += alpha * d[from];
+    return true;
+  } else return false;
 }
 
 TD_T_DEC

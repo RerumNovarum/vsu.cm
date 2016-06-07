@@ -32,8 +32,7 @@ namespace td {
         void set(int i, int j, V v);
         val_const_ref operator()(int i, int j) const;
         val_ref operator()(int i, int j);
-        void row_add(int from, int to, V alpha);
-        bool can_add(int from, int to, V alpha);
+        bool row_try_add(int from, int to, V alpha);
         void mul_row(int i, V alpha);
         size_t size() const;
         size_t row_vars_no(int row) const;

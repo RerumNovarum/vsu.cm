@@ -8,6 +8,8 @@ namespace td {
       void solve(tridiag_aug<V>& eqn, bool verbose) {
         if (verbose) std::cout << eqn;
         int n = eqn.size();
+        if (n == 1 && eqn(0,0) != 0) eqn.mul_row(0, 1/eqn(0,0));
+        if (n < 2) return;
         for (int i = 0; i < n - 1; ++i)
           if (eqn(i, i+1) == 0) throw unsolvable();
         std::vector<V> y(n);

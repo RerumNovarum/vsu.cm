@@ -43,8 +43,9 @@ namespace td {
         int base;
         for (base = 0; base < n; ++base)
           if (eqn.row_vars_no(base) == 1) break;
-        if (base == n)
-          throw "fixme";
+        if (base == n) {
+          std::cerr << "cannot solve via doublesweep" << std::endl;
+        }
         --base;
         for (int i = base; i < n - 1; ++i)
           relax_forward(eqn, i, i+1, verbose);
@@ -57,6 +58,8 @@ namespace td {
         if (verbose)
           std::cout << eqn;
         size_t n = eqn.size();
+        if (n == 1 && eqn(0,0) != 0) eqn.mul_row(0, 1/eqn(0,0));
+        if (n < 2) return;
         twodiagonalize(eqn, verbose);
         if (verbose)
           std::cout << eqn;
@@ -106,7 +109,7 @@ namespace td {
             double alpha = -eqn(i2,i2-1)/eqn(i1,i1);
             if (verbose)
               std::cout << i1 << " " << i2 << " " << alpha << std::endl;
-            eqn.row_add(i1, i2, alpha);
+            eqn.row_try_add(i1, i2, alpha);
             if(verbose)
               std::cout << eqn;
           }
@@ -121,7 +124,7 @@ namespace td {
             double alpha = -eqn(i1,i1+1)/eqn(i2, i2);
             if (verbose)
               std::cout << i2 << " " << i1 << " " << alpha << std::endl;
-            eqn.row_add(i2, i1, alpha);
+            eqn.row_try_add(i2, i1, alpha);
             if (verbose)
               std::cout << eqn;
           }

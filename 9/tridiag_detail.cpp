@@ -86,26 +86,8 @@ void TD_C_DEC::set(int i, int j, V v) {
 }
 
 TD_T_DEC
-bool TD_C_DEC::can_add(int from, int to, V alpha) {
-  if (from == to || abs(from - to) > 2) return false;
-  V f[5], t[5];
-  fill_n(f, zero, 5);
-  fill_n(t, zero, 5);
-  if (to > from) {
-    copy_row(from, f);
-    copy_row(to, t + (to - from));
-    if (f[0] != - alpha * t[0]) return false;
-  } else {
-    copy_row(from, f + (from - to));
-    copy_row(to, t);
-    if (f[4] != - alpha * t[4]) return false;
-  }
-  return true;
-}
-
-TD_T_DEC
-void TD_C_DEC::row_add(int from, int to, V alpha) {
-  // assert(can_add(from, to, alpha));
+bool TD_C_DEC::row_try_add(int from, int to, V alpha) {
+  if (from < 0 || from >= N || to < 0 || to >= N) return false; 
   vector f, t;
   f.resize(5);
   t.resize(5);
@@ -145,9 +127,12 @@ void TD_C_DEC::row_add(int from, int to, V alpha) {
       j2 = 2;
     }
   }
-    for (int j = j1, rj=rj1; j < j2; ++j, ++rj) {
-      set(to, rj, t[j]);
-    }
+  for (int j = 0; j < j1; ++j) if (t[j] != 0) return false;
+  for (int j = j2; j < 5; ++j) if (t[j] != 0) return false;
+  for (int j = j1, rj=rj1; j < j2; ++j, ++rj) {
+    set(to, rj, t[j]);
+  }
+  return true;
 }
 
 TD_T_DEC
