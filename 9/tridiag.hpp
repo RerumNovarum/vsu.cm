@@ -42,6 +42,7 @@ namespace td {
         int N;
         V zero = 0;
 
+      public:
         template<typename dest_iter>
           void copy_row(int i, dest_iter dest_begin);
     };

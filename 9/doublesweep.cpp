@@ -19,6 +19,7 @@ namespace td {
 
     template<typename V>
       void twodiagonalize(tridiag_aug<V>& eqn, bool verbose) { // particular case
+        if (verbose) std::cout << "sweeping forward" << std::endl;
         int n = eqn.size();
         if (eqn(0,0) != 0) {
           eqn.mul_row(0, 1/eqn(0,0));
@@ -39,6 +40,7 @@ namespace td {
 
     template<typename V>
       void sweepback(tridiag_aug<V>& eqn, bool verbose) {
+        if (verbose) std::cout << "sweeping back" << std::endl;
         int n = eqn.size();
         int base;
         for (base = 0; base < n; ++base)
@@ -46,10 +48,7 @@ namespace td {
         if (base == n) {
           std::cerr << "cannot solve via doublesweep" << std::endl;
         }
-        --base;
-        for (int i = base; i < n - 1; ++i)
-          relax_forward(eqn, i, i+1, verbose);
-        for (int i = base; i >= 0; --i)
+        for (int i = n-2; i >= 0; --i)
           relax_backward(eqn, i, i+1, verbose);
       }
 
@@ -78,8 +77,10 @@ namespace td {
         //  for (int i = 0; i < n - 1; ++i)
         //    relax(t, d, i, i+1);
         //}
-        if (verbose)
+        if (verbose) {
           std::cout << eqn;
+          std::cout << "normalizing" << std::endl;
+        }
         for (int i = 0; i < n; ++i) {
           if (eqn(i,i) != 0) {
             eqn.mul_row(i, 1/eqn(i,i));

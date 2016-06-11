@@ -5,7 +5,7 @@
 #include "doublesweep.cpp"
 #include "instable.cpp"
 
-#define SOLVER td::instable
+#define SOLVER td::doublesweep
 
 using namespace td;
 

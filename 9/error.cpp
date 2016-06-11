@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <numeric>
+#include <cassert>
 
 #include "tridiag.hpp"
 #include "doublesweep.cpp"
@@ -13,16 +14,23 @@ int main(int argc, char** argv) {
   if (std::find(argv, argv+argc, std::string("-v")) != argv+argc) verbose = true;
   std::cout.precision(8);
   std::cout.setf(std::ios::fixed);
-  std::string td_fname(argv[1]), d_fname(argv[2]);
+  std::string
+    td_fname(argv[1]),
+    d_fname(argv[2]),
+    sol_fname(argv[3]);
   std::ifstream td_in(td_fname);
   std::ifstream d_in(d_fname);
+  std::ifstream sol_in(sol_fname);
   td::tridiag_aug<double> eqn(td_in, d_in);
   int n = eqn.size();
   std::vector<double> ans;
   ans.reserve(n);
+  int n1;
+  sol_in >> n1;
+  assert(n == n1);
   for (int i = 0; i < n; ++i) {
     double v;
-    std::cin >> v;
+    sol_in >> v;
     ans.push_back(v);
   }
   SOLVER::solve(eqn, verbose);

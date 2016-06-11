@@ -107,17 +107,37 @@ bool TD_C_DEC::row_try_add(int from, int to, V alpha) {
       copy_row(from, f.begin() + from - to - 1);
     }
   }
-  // for_each(t, t + 5, [](V v) { std::cout << "tv=" << v << std::endl; });
+#ifdef DEBUG
+  std::cout << "t: ";
+  std::for_each(t.begin(), t.end(), [](V v) { std::cout << v << " "; });
+  std::cout << std::endl;
+  std::cout << "f: ";
+  std::for_each(f.begin(), f.end(), [](V v) { std::cout << v << " "; });
+  std::cout << std::endl;
+#endif
+  int vars_no = 0;
   for (int i = 0; i < 5; ++i) {
     t[i] += alpha * f[i];
+    if (t[i] != 0) vars_no++;
   }
+#ifdef DEBUG
+  std::cout << "r: ";
+  std::for_each(t.begin(), t.end(), [](V v) { std::cout << v << " "; });
+  std::cout << std::endl;
+#endif
+  if(vars_no > 3) return false;
   int j1, j2, rj1;
   j1 = 0;
   j2 = 3;
   rj1 = to - 1;
   if(to > from) {
     if (from != 0) {
-      j1 = 1;
+      j1 = to - from;
+    }
+    if (to == N - 1) {
+      j2 = j1 + 2;
+    } else {
+      j2 = j1 + 3;
     }
   } else {
     if (to == 0) {
@@ -127,6 +147,9 @@ bool TD_C_DEC::row_try_add(int from, int to, V alpha) {
       j2 = 2;
     }
   }
+#ifdef DEBUG
+  std::cout << "j1=" << j1 << " j2=" << j2 << std::endl;
+#endif
   for (int j = 0; j < j1; ++j) if (t[j] != 0) return false;
   for (int j = j2; j < 5; ++j) if (t[j] != 0) return false;
   for (int j = j1, rj=rj1; j < j2; ++j, ++rj) {
